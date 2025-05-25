@@ -35,6 +35,9 @@ program
         process.exit(1);
       }
 
+      console.log("⚠️  Warning: CLI analysis is more prone to false positives than the Vite plugin");
+      console.log("   For more accurate results during development, use the Vite plugin instead\n");
+
       const schemaSource = options.endpoint
         ? { endpoint: options.endpoint }
         : { sdlPath: options.sdl };
