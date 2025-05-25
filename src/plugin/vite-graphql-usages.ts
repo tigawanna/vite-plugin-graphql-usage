@@ -49,7 +49,6 @@ export default function viteGraphQLUsages(options: GraphQLUsageOptions): Plugin 
       try {
         // Use the code parameter instead of reading file again
         const lines = code.split("\n");
-        console.log("===  lines  === ",lines)
 
         // Loop through each query/mutation and check if it's used in this file
         for (const query of allQueries) {
