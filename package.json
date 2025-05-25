@@ -1,0 +1,55 @@
+{
+  "name": "vite-plugin-graphql-usage",
+  "description": "A Vite plugin for analyzing GraphQL usage",
+  "private": false,
+  "version": "0.0.1",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "bin": {
+    "graphql-usage-analyzer": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./cli": {
+      "import": "./dist/cli.js"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tigawanna/vite-plugin-graphql-usage.git"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "check-exports": "attw --pack . --ignore-rules=cjs-resolves-to-esm --exclude-entrypoints=vite-plugin-graphql-usage/cli",
+    "postbuild": "npm run check-exports",
+    "cli:test": "node dist/cli.js analyze --help"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.17.0",
+    "@changesets/cli": "^2.27.1",
+    "@types/node": "^22.15.3",
+    "tsup": "^8.4.0",
+    "typescript": "^5.0.2",
+    "vite": "^6.3.5",
+    "vite-plugin-inspect": "^11.1.0"
+  },
+  "dependencies": {
+    "@rollup/pluginutils": "^5.1.4",
+    "commander": "^14.0.0",
+    "glob": "^11.0.2",
+    "graphql": "^16.11.0"
+  }
+}
