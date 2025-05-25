@@ -41,6 +41,7 @@
     "@arethetypeswrong/cli": "^0.17.0",
     "@changesets/cli": "^2.27.1",
     "@types/node": "^22.15.3",
+    "release-it": "^19.0.2",
     "tsup": "^8.4.0",
     "typescript": "^5.0.2",
     "vite": "^6.3.5",
