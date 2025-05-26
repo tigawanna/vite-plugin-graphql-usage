@@ -44,7 +44,9 @@ export default defineConfig({
       },
       include: ['**/*.ts', '**/*.tsx'],
       exclude: ['node_modules/**', '**/*.test.*'],
-      outputFileName: 'graphql-usage-report.md'
+      outputFileName: 'graphql-usage-report.md',
+      saveReport: true,        // Save markdown report (default: true)
+      printTable: true         // Print detailed table in console (optional)
     })
   ],
 });
@@ -56,13 +58,13 @@ Run the analyzer from the command line:
 
 ```bash
 # Using GraphQL endpoint
-npm run cli analyze --endpoint https://rickandmortyapi.com/graphql
+npx graphql-usage-analyzer analyze --endpoint https://rickandmortyapi.com/graphql
 
 # Using SDL file
-npm run cli analyze --sdl ./schema.graphql
+npx graphql-usage-analyzer analyze --sdl ./schema.graphql
 
 # With custom options
-npm run cli analyze \
+npx graphql-usage-analyzer analyze \
   --endpoint https://api.example.com/graphql \
   --include "src/**/*.ts,src/**/*.tsx" \
   --exclude "**/*.test.*,**/*.spec.*" \
@@ -109,8 +111,30 @@ Control which files to analyze:
 ```typescript
 {
   outputFileName: 'my-graphql-report.md',
-  queryDirectory: './src/graphql/**/*.ts'
+  queryDirectory: './src/graphql/**/*.ts',
+  saveReport: true,          // Whether to save markdown report (default: true)
+  printTable: false          // Whether to print detailed table in console (default: undefined)
 }
+```
+
+#### Output Control Options
+
+- **`saveReport`**: Controls whether a markdown report file is generated. Set to `false` to disable file generation and only show console output.
+- **`printTable`**: Controls whether the detailed table is printed to the console. When `true`, shows a comprehensive table with all operations, their status, file paths, and line numbers.
+
+### Complete Configuration Example
+
+```typescript
+viteGraphQLUsages({
+  schemaSource: {
+    endpoint: 'https://api.example.com/graphql'
+  },
+  include: ['src/**/*.ts', 'src/**/*.tsx'],
+  exclude: ['**/*.test.*', '**/*.spec.*'],
+  outputFileName: 'custom-report.md',
+  saveReport: true,     // Generate markdown file
+  printTable: true      // Show detailed console table
+})
 ```
 
 ## Output Examples
@@ -189,11 +213,13 @@ type SchemaEndpointSource = {
 };
 
 export interface GraphQLUsageOptions {
+  schemaSource: SchemaSource;
   include?: string | RegExp | Array<string | RegExp>;
   exclude?: string | RegExp | Array<string | RegExp>;
-  schemaSource: SchemaSource;
   queryDirectory?: string;
   outputFileName?: string;
+  saveReport?: boolean;      // Whether to save markdown report (default: true)
+  printTable?: boolean;      // Whether to print detailed table in console
 }
 
 export type QueryInfo = {
@@ -299,18 +325,20 @@ viteGraphQLUsages({
 ### Available Commands
 
 ```bash
-# Basic analysis
-npx vite-plugin-graphql-usage  --endpoint <url>
-npx vite-plugin-graphql-usage  --sdl <path>
+# Basic analysis using GraphQL endpoint
+npx graphql-usage-analyzer analyze --endpoint https://rickandmortyapi.com/graphql
+
+# Using SDL file
+npx graphql-usage-analyzer analyze --sdl ./schema.graphql
 
 # With custom patterns
-npx vite-plugin-graphql-usage  --endpoint <url> --include "**/*.ts" --exclude "**/test/**"
+npx graphql-usage-analyzer analyze --endpoint <url> --include "**/*.ts,**/*.tsx" --exclude "**/test/**"
 
 # Custom output location
-npx vite-plugin-graphql-usage  --sdl schema.graphql --output reports/usage.md
+npx graphql-usage-analyzer analyze --sdl schema.graphql --output reports/usage.md
 
-#  different directory
-npx vite-plugin-graphql-usage analyze --endpoint <url> --directory /path/to/project
+# Analyze different directory
+npx graphql-usage-analyzer analyze --endpoint <url> --directory /path/to/project
 ```
 
 ### CLI Options
