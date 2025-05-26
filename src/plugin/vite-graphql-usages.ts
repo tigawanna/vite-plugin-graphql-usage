@@ -23,6 +23,7 @@ export default function viteGraphQLUsages(options: GraphQLUsageOptions): Plugin 
 
   const plugin: Plugin = {
     name: "vite-graphql-plugin",
+    apply:"build",
 
     // Use transform hook but return null to avoid modifying code
     async transform(code, id) {
