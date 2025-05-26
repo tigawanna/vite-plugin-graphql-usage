@@ -3,6 +3,7 @@ import { createFilter } from "@rollup/pluginutils";
 import { introspectSchema } from "@/introspect/introspec.js";
 import { writePluginReport, type QueryInfo } from "@/helpers/fs.js";
 import type { GraphQLUsageOptions } from "@/types.js";
+import { isGraphQLOperation } from "@/helpers/gql.js";
 
 
 
@@ -59,7 +60,7 @@ export default function viteGraphQLUsages(options: GraphQLUsageOptions): Plugin 
             lineIndex++;
 
             // Look for the query name in the line
-            if (line.includes(query.name)) {
+            if (line.includes(query.name) && isGraphQLOperation(line)) {
               // Mark as found and update location
               query.found = true;
               query.path = id;

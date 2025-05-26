@@ -3,6 +3,7 @@ import { readFile } from "fs/promises";
 import { createFilter } from "@rollup/pluginutils";
 import { introspectSchema } from "@/introspect/introspec.js";
 import type { SchemaSource, QueryInfo } from "@/types.js";
+import { isGraphQLOperation } from "@/helpers/gql.js";
 
 export interface AnalyzeOptions {
   schemaSource: SchemaSource;
@@ -56,7 +57,7 @@ export async function analyzeGraphQLUsage(options: AnalyzeOptions): Promise<Quer
         for (const line of lines) {
           lineIndex++;
 
-          if (line.includes(query.name)) {
+          if (line.includes(query.name) && isGraphQLOperation(line)) {
             query.found = true;
             query.path = filePath;
             query.line = lineIndex;
