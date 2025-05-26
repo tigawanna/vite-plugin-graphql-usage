@@ -20,10 +20,28 @@ export function isGraphQLOperation(line: string): boolean {
     trimmedLine.startsWith("let ") ||
     trimmedLine.startsWith("var ") ||
     trimmedLine.includes("function") ||
+    trimmedLine.includes("[") ||
+    trimmedLine.includes("]") ||
+    trimmedLine.includes("({") ||
     trimmedLine.includes("=>") ||
-    trimmedLine.includes("return ")
+    trimmedLine.includes("return ") ||
+    trimmedLine.includes("=") || // Reject assignments
+    trimmedLine.includes("{:") // Reject JavaScript object syntax like { hello: }
   ) {
     return false;
+  }
+
+  // Check for GraphQL selection sets like { user { name } } or { user(id: 1) { name } }
+  // Allows colons only inside parentheses (arguments), not between field and selection set
+  const selectionSetPattern = /^\{\s*[a-zA-Z_][a-zA-Z0-9_]*(\([^)]*:[^)]*\))?\s*\{[^:]*\}\s*\}$/;
+  if (selectionSetPattern.test(trimmedLine)) {
+    return true;
+  }
+
+  // Check for simple selection sets like "{ hello }" or "{ user }"
+  const simpleSelectionPattern = /^\{\s*[a-zA-Z_][a-zA-Z0-9_]*\s*\}$/;
+  if (simpleSelectionPattern.test(trimmedLine)) {
+    return true;
   }
 
   // Check for simple field selections like "addEvent{}" or "addEvent(args){}"
@@ -32,30 +50,21 @@ export function isGraphQLOperation(line: string): boolean {
     return true;
   }
 
-  // Check for common GraphQL patterns
-  const hasGraphQLIndicators =
-    trimmedLine.includes("query ") ||
-    trimmedLine.includes("mutation ") ||
-    trimmedLine.includes("subscription ") ||
-    trimmedLine.includes("fragment ") ||
-    (trimmedLine.startsWith("{") && trimmedLine.includes(" {") && trimmedLine.includes("}"));
-
-  // Quick check for common patterns before attempting to parse
-  if (!hasGraphQLIndicators) {
-    return false;
+  // Check for incomplete field selections like "customerStats {" (opening brace without closing)
+  const incompleteFieldPattern = /^[a-zA-Z_][a-zA-Z0-9_]*(\([^)]*\))?\s*\{\s*$/;
+  if (incompleteFieldPattern.test(trimmedLine)) {
+    return true;
   }
 
-  // Try to parse as GraphQL to confirm (for complete operations)
-  try {
-    const parsed = parse(trimmedLine);
-    // Check if the document has any operation definitions or fragments
-    return parsed.definitions.some(
-      (def) => def.kind === Kind.OPERATION_DEFINITION || def.kind === Kind.FRAGMENT_DEFINITION
-    );
-  } catch (error) {
-    // If parsing fails, it's likely not valid GraphQL
-    return false;
-  }
+  // Check for GraphQL operation keywords
+//   if (
+//     trimmedLine.includes("query ") ||
+//     trimmedLine.includes("mutation ") ||
+//     trimmedLine.includes("subscription ") ||
+//     trimmedLine.includes("fragment ")
+//   ) {
+//     return true;
+//   }
+
+  return false;
 }
-
-// ...existing code...
