@@ -60,7 +60,7 @@ export default function viteGraphQLUsages(options: GraphQLUsageOptions): Plugin 
             lineIndex++;
 
             // Look for the query name in the line
-            if (line.includes(query.name)) {
+            if (line.includes(query.name) && isGraphQLOperation(line)) {
               // Mark as found and update location
               query.found = true;
               query.path = id;
@@ -94,8 +94,8 @@ export default function viteGraphQLUsages(options: GraphQLUsageOptions): Plugin 
         name: query.name,
         type: query.type,
         path: query.found 
-          ? (query.path.length > 20 
-          ? '...' + query.path.slice(-20) 
+          ? (query.path.length > 30 
+          ? '...' + query.path.slice(-30) 
           : query.path)
           : "Not found",
         line: query.found ? query.line : -1,
