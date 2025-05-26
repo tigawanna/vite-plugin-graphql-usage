@@ -2,7 +2,7 @@
   "name": "vite-plugin-graphql-usage",
   "description": "A Vite plugin for analyzing GraphQL usage",
   "private": false,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
