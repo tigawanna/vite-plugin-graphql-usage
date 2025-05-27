@@ -1,9 +1,9 @@
 import { glob } from "glob";
 import { readFile } from "fs/promises";
 import { createFilter } from "@rollup/pluginutils";
-import { introspectSchema } from "@/introspect/introspec.js";
-import type { SchemaSource, QueryInfo } from "@/types.js";
-import { isGraphQLOperation } from "@/helpers/gql.js";
+import { introspectSchema } from "../introspect/introspec.js";
+import type { SchemaSource, QueryInfo } from "../types.js";
+import { isGraphQLOperation } from "../helpers/gql.js";
 
 export interface AnalyzeOptions {
   schemaSource: SchemaSource;

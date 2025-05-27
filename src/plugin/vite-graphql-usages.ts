@@ -1,10 +1,10 @@
 import { type Plugin } from "vite";
 import { createFilter } from "@rollup/pluginutils";
-import { introspectSchema } from "@/introspect/introspec.js";
-import { writePluginReport, type QueryInfo } from "@/helpers/fs.js";
-import type { GraphQLUsageOptions } from "@/types.js";
-import { isGraphQLOperation } from "@/helpers/gql.js";
-import { sortQueriesByImplementationStatus } from "@/helpers/array-shift.js";
+import { introspectSchema } from "../introspect/introspec.js";
+import { writePluginReport, type QueryInfo } from "../helpers/fs.js";
+import type { GraphQLUsageOptions } from "../types.js";
+import { isGraphQLOperation } from "../helpers/gql.js";
+import { sortQueriesByImplementationStatus } from "../helpers/array-shift.js";
 
 
 

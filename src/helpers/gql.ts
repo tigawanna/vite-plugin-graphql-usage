@@ -55,16 +55,8 @@ export function isGraphQLOperation(line: string): boolean {
   if (incompleteFieldPattern.test(trimmedLine)) {
     return true;
   }
+  // Check for GraphQL operation keywords (including multi-line operations)
 
-  // Check for GraphQL operation keywords
-//   if (
-//     trimmedLine.includes("query ") ||
-//     trimmedLine.includes("mutation ") ||
-//     trimmedLine.includes("subscription ") ||
-//     trimmedLine.includes("fragment ")
-//   ) {
-//     return true;
-//   }
 
   return false;
 }
