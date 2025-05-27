@@ -2,6 +2,7 @@
 import { writeGraphQLReportToMarkdown } from "@/helpers/fs.js";
 import { Command } from "commander";
 import { analyzeGraphQLUsage } from "@/cli/analyzer.js";
+import { sortQueriesByImplementationStatus } from "@/helpers/array-shift.js";
 
 
 const program = new Command();
@@ -28,6 +29,7 @@ program
   )
   .option("-o, --output <path>", "Output markdown file path", "./graphql-usage-report.md")
   .option("-d, --directory <path>", "Project directory to analyze", process.cwd())
+  .option("-s, --sort <order>", "Sort order for operations: completed-first, uncompleted-first, or original", "original")
   .action(async (options) => {
     try {
       if (!options.endpoint && !options.sdl) {
@@ -54,7 +56,16 @@ program
         projectDirectory: options.directory,
       });
 
-      await writeGraphQLReportToMarkdown(results, options.output);
+      // Sort results based on sort option
+      let sortedResults = [...results];
+      if (options.sort === 'completed-first') {
+        sortedResults = sortQueriesByImplementationStatus(results).reverse();
+      } else if (options.sort === 'uncompleted-first') {
+        sortedResults = sortQueriesByImplementationStatus(results);
+      }
+      // else keep original order
+
+      await writeGraphQLReportToMarkdown(sortedResults, options.output);
 
       const foundCount = results.filter((q) => q.found).length;
       const totalCount = results.length;

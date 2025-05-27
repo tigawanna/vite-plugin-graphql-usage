@@ -113,7 +113,8 @@ Control which files to analyze:
   outputFileName: 'my-graphql-report.md',
   queryDirectory: './src/graphql/**/*.ts',
   saveReport: true,          // Whether to save markdown report (default: true)
-  printTable: false          // Whether to print detailed table in console (default: undefined)
+  printTable: false,         // Whether to print detailed table in console (default: undefined)
+  sortOrder: 'original'      // Sort order: 'completed-first', 'uncompleted-first', or 'original' (default: 'original')
 }
 ```
 
@@ -133,7 +134,8 @@ viteGraphQLUsages({
   exclude: ['**/*.test.*', '**/*.spec.*'],
   outputFileName: 'custom-report.md',
   saveReport: true,     // Generate markdown file
-  printTable: true      // Show detailed console table
+  printTable: true,     // Show detailed console table
+  sortOrder: 'completed-first'  // Sort completed operations first
 })
 ```
 
@@ -351,6 +353,7 @@ npx graphql-usage-analyzer analyze --endpoint <url> --directory /path/to/project
 | `--exclude` | `-x` | File patterns to exclude | `node_modules/**` |
 | `--output` | `-o` | Output file path | `./graphql-usage-report.md` |
 | `--directory` | `-d` | Project directory | `process.cwd()` |
+| `--sort` | `-s` | Sort order: 'completed-first', 'uncompleted-first', or 'original' | `original` |
 
 ## Best Practices
 

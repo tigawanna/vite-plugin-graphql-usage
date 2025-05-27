@@ -4,6 +4,7 @@ import { introspectSchema } from "@/introspect/introspec.js";
 import { writePluginReport, type QueryInfo } from "@/helpers/fs.js";
 import type { GraphQLUsageOptions } from "@/types.js";
 import { isGraphQLOperation } from "@/helpers/gql.js";
+import { sortQueriesByImplementationStatus } from "@/helpers/array-shift.js";
 
 
 
@@ -14,7 +15,8 @@ export default function viteGraphQLUsages(options: GraphQLUsageOptions): Plugin 
     queryDirectory,
     outputFileName,
     saveReport = true,
-    printTable
+    printTable,
+    sortOrder = 'original'
   } = options;
 
   // Global array that contains all queries from schema (starts with found: false)
@@ -107,8 +109,17 @@ export default function viteGraphQLUsages(options: GraphQLUsageOptions): Plugin 
         console.table(displayQueries);
       }
 
+      // Sort queries based on sortOrder option
+      let sortedQueries = [...allQueries];
+      if (sortOrder === 'completed-first') {
+        sortedQueries = sortQueriesByImplementationStatus(allQueries).reverse();
+      } else if (sortOrder === 'uncompleted-first') {
+        sortedQueries = sortQueriesByImplementationStatus(allQueries);
+      }
+      // else keep original order
+
       if (saveReport) {
-        writePluginReport(allQueries, outputFileName || "graphql-usage-report.md");
+        writePluginReport(sortedQueries, outputFileName || "graphql-usage-report.md");
       }
       
 

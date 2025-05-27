@@ -10,6 +10,7 @@ export interface GraphQLUsageOptions {
   exclude?: string | RegExp | Array<string | RegExp>;
   queryDirectory?: string;
   outputFileName?: string;
+  sortOrder?: 'completed-first' | 'uncompleted-first' | 'original';
 }
 
 export type QueryInfo = {
