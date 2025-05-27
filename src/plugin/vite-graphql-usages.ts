@@ -84,16 +84,24 @@ export default function viteGraphQLUsages(options: GraphQLUsageOptions): Plugin 
 
       if (options.schemaSource.endpoint) {
         console.log(`🌐 Endpoint: ${options.schemaSource.endpoint}`);
-      }
-      if (options.schemaSource.sdlPath) {
+      }      if (options.schemaSource.sdlPath) {
         console.log(`📄 SDL Path: ${options.schemaSource.sdlPath}`);
       }
       if (queryDirectory) {
         console.log(`📁 Query Directory: ${queryDirectory}`);
       }
 
-      // Display all queries with their status
-      const displayQueries = allQueries.map((query) => ({
+      // Sort queries based on sortOrder option
+      let sortedQueries = [...allQueries];
+      if (sortOrder === 'completed-first') {
+        sortedQueries = sortQueriesByImplementationStatus(allQueries);
+      } else if (sortOrder === 'uncompleted-first') {
+        sortedQueries = sortQueriesByImplementationStatus(allQueries).reverse();
+      }
+      // else keep original order
+
+      // Display all queries with their status (using sorted queries)
+      const displayQueries = sortedQueries.map((query) => ({
         name: query.name,
         type: query.type,
         path: query.found 
@@ -108,15 +116,6 @@ export default function viteGraphQLUsages(options: GraphQLUsageOptions): Plugin 
         console.log("\nDetailed Report:");
         console.table(displayQueries);
       }
-
-      // Sort queries based on sortOrder option
-      let sortedQueries = [...allQueries];
-      if (sortOrder === 'completed-first') {
-        sortedQueries = sortQueriesByImplementationStatus(allQueries).reverse();
-      } else if (sortOrder === 'uncompleted-first') {
-        sortedQueries = sortQueriesByImplementationStatus(allQueries);
-      }
-      // else keep original order
 
       if (saveReport) {
         writePluginReport(sortedQueries, outputFileName || "graphql-usage-report.md");
